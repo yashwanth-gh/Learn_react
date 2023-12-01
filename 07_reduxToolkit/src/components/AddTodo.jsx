@@ -1,12 +1,29 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import {useDispatch} from 'react-redux';
-import { addTodo } from '../features/todo/todoSlice';
+import { addTodo, updateTodo } from '../features/todo/todoSlice';
 
-function AddTodo() {
+function AddTodo({isEditable,editText,changeEditable,changeEditText,id,changeId}) {
     const [todo, setTodo] = useState('');
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        if(isEditable){
+            changeEditText('');
+            setTodo(editText);
+        }
+    },[isEditable])
+
     const addNewTodo = (e)=>{
         e.preventDefault();
+        if(isEditable){
+            const text = todo;
+            dispatch(updateTodo({id,text}));
+            changeId('');
+            changeEditable(false)
+        setTodo('');
+
+            return;
+        }
         if(!todo){
             alert("Empty field cannot be submitted");
         return;
